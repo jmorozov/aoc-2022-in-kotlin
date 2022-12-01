@@ -1,17 +1,70 @@
+import java.util.PriorityQueue
+
 fun main() {
-    fun part1(input: List<String>): Int {
-        return input.size
+    val inputData = readInput("Day01")
+    part1(inputData)
+    part2(inputData)
+}
+
+fun part1(inputData: List<String>) {
+    var theMostTotalCalories = 0
+    var currentElfCalories = 0
+    for (line in inputData) {
+        when(line.trim()) {
+            "" -> {
+                if (currentElfCalories > theMostTotalCalories) {
+                    theMostTotalCalories = currentElfCalories
+                }
+                currentElfCalories = 0
+            }
+            else -> {
+                val caloriesNumber = line.toInt()
+                currentElfCalories += caloriesNumber
+            }
+        }
+    }
+    if (currentElfCalories > theMostTotalCalories) {
+        theMostTotalCalories = currentElfCalories
     }
 
-    fun part2(input: List<String>): Int {
-        return input.size
+    println("The most total calories: $theMostTotalCalories")
+}
+
+private const val NUMBER_OF_TOPS = 3
+
+fun part2(inputData: List<String>) {
+    var currentElfCalories = 0
+    val queue = PriorityQueue<Int>(NUMBER_OF_TOPS)
+
+    for (line in inputData) {
+        when(line.trim()) {
+            "" -> {
+                val minCaloriesNumber: Int? = queue.peek()
+                when {
+                    minCaloriesNumber == null || queue.size < NUMBER_OF_TOPS -> queue.add(currentElfCalories)
+                    minCaloriesNumber < currentElfCalories -> {
+                        queue.poll()
+                        queue.add(currentElfCalories)
+                    }
+                }
+                currentElfCalories = 0
+            }
+            else -> {
+                val caloriesNumber = line.toInt()
+                currentElfCalories += caloriesNumber
+            }
+        }
+    }
+    val minCaloriesNumber: Int? = queue.peek()
+    if (minCaloriesNumber != null) {
+        if (queue.size < NUMBER_OF_TOPS) {
+            queue.add(currentElfCalories)
+        } else if (minCaloriesNumber < currentElfCalories) {
+            queue.poll()
+            queue.add(currentElfCalories)
+        }
     }
 
-    // test if implementation meets criteria from the description, like:
-    val testInput = readInput("Day01_test")
-    check(part1(testInput) == 1)
-
-    val input = readInput("Day01")
-    println(part1(input))
-    println(part2(input))
+    val theMostNTotalCalories = queue.sum()
+    println("The most $NUMBER_OF_TOPS total calories: $theMostNTotalCalories")
 }
