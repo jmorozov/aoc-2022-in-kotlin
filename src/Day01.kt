@@ -6,7 +6,7 @@ fun main() {
     part2(inputData)
 }
 
-fun part1(inputData: List<String>) {
+private fun part1(inputData: List<String>) {
     var theMostTotalCalories = 0
     var currentElfCalories = 0
     for (line in inputData) {
@@ -32,7 +32,7 @@ fun part1(inputData: List<String>) {
 
 private const val NUMBER_OF_TOPS = 3
 
-fun part2(inputData: List<String>) {
+private fun part2(inputData: List<String>) {
     var currentElfCalories = 0
     val queue = PriorityQueue<Int>(NUMBER_OF_TOPS)
 
